@@ -1,0 +1,22 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET    /                               controllers.Application.index
+
+# Project API
+GET    /project/                       controllers.Application.allProjects()
+
+POST   /project/:id                    controllers.Application.registerProject(id: String)
+GET    /project/:id                    controllers.Application.projectStatus(id: String)
+
+PUT    /project/error/:id              controllers.Application.errorInProject(id: String)
+PUT    /project/analysisfinished/:id   controllers.Application.analysisFinishedInProject(id: String)
+PUT    /project/delivered/:id          controllers.Application.deliveredProject(id: String)
+
+POST    /project/analysis          controllers.Application.associatePiperLogWithProject(id: String, log: String)
+PUT    /project/analysis          controllers.Application.updatePiperLogWithProject(id: String, log: String)
+
+# Map static resources from the /public folder to the /assets URL path
+GET    /assets/*file                   controllers.Assets.at(path="/public", file)
