@@ -6,9 +6,13 @@ import play.api.Play.current
 import anorm._
 import anorm.SqlParser._
 
+import play.api.libs.json.Json
+
 case class PiperProject(name: String, logpath: String)
 
 object PiperProjects {
+  
+  implicit val piperProjectFormat = Json.format[PiperProject]
 
   val simple = {
     get[String]("name") ~
@@ -22,6 +26,12 @@ object PiperProjects {
   def findAll(): Seq[PiperProject] = {
     DB.withConnection { implicit connection =>
       SQL("select * from piperprojects").as(PiperProjects.simple *)
+    }
+  }
+  
+  def find(name: String): Seq[PiperProject] = {
+    DB.withConnection { implicit connection =>
+      SQL("select * from piperprojects where name={name}").on('name -> name).as(PiperProjects.simple *)
     }
   }
 

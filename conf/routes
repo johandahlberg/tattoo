@@ -7,6 +7,7 @@ GET    /                               controllers.Application.index
 
 # Project API
 GET    /project/                       controllers.Application.allProjects()
+GET    /project/ongoing                       controllers.Application.onGoingProjects()
 
 POST   /project/:id                    controllers.Application.registerProject(id: String)
 GET    /project/:id                    controllers.Application.projectStatus(id: String)
@@ -15,6 +16,7 @@ PUT    /project/error/:id              controllers.Application.errorInProject(id
 PUT    /project/analysisfinished/:id   controllers.Application.analysisFinishedInProject(id: String)
 PUT    /project/delivered/:id          controllers.Application.deliveredProject(id: String)
 
+GET    /project/analysis/:id          controllers.Application.getPiperStatusOfProject(id: String)
 POST    /project/analysis          controllers.Application.associatePiperLogWithProject(id: String, log: String)
 PUT    /project/analysis          controllers.Application.updatePiperLogWithProject(id: String, log: String)
 

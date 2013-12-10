@@ -2,27 +2,24 @@
  
 # --- !Ups
 
-CREATE SEQUENCE projects_id_seq;
-
-CREATE TABLE projects (
-    id long NOT NULL DEFAULT nextval('projects_id_seq'),
-    name varchar(255),
+CREATE TABLE projects (    
+    name varchar(255) NOT NULL PRIMARY KEY,
     status varchar(255)
 );
 
 CREATE TABLE piperprojects (
-    name varchar(255),
-    logpath text
+    name varchar(255) NOT NULL PRIMARY KEY,
+    logpath text,
+    FOREIGN KEY (name) REFERENCES projects(name)
 );
 
-insert into projects(name, status) values ( 'aa', 'ongoing' );
-insert into projects(name, status) values ( 'd', 'ongoing' );
+insert into projects(name, status) values ( 'exome_test', 'ongoing' );
+insert into projects(name, status) values ( 'dd', 'ongoing' );
 
-insert into piperprojects(name, logpath) values ( 'aa', '/some/fake/log/path' );
- 
- 
+insert into piperprojects(name, logpath) values ( 'exome_test', '/proj/a2009002/private/nobackup/FU-Exom/piper_test/piper/pipeline_output/logs/exome.log' );
+insert into piperprojects(name, logpath) values ( 'dd', '/some/fake/log/path' );
+  
 # --- !Downs
 
 DROP TABLE IF EXISTS piperprojects; 
 DROP TABLE IF EXISTS projects;
-DROP SEQUENCE projects_id_seq;
