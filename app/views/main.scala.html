@@ -26,7 +26,7 @@
 
   </head>
 
-  <body onload="getOngoing()">
+  <body onload="initialize()">
   
     <div id="wrapper">
       
@@ -34,36 +34,36 @@
       <div id="sidebar-wrapper">
         <ul class="sidebar-nav">
           <li class="sidebar-brand"><a href="#">Tattoo</a></li>
-          <li><a href="#">Dashboard</a></li>
-          <li><a href="#">Lab view</a></li>
-          <li><a href="#">Analysis view</a></li>
-          <li><a href="#">Archives</a></li>
+          <li><a href="#dashboard">Dashboard</a></li>
+          <li><a href="#labview">Lab view</a></li>
+          <li><a href="#analysisview">Analysis view</a></li>
+          <li><a href="#archives">Archives</a></li>
         </ul>
       </div>
           
       <!-- Page content -->
       <div id="page-content-wrapper">
         <div class="content-header">
-          <h1>
-            <a id="menu-toggle" href="#dashboard" class="btn btn-default"><i class="icon-reorder"></i></a>
-            Dashboard
-          </h1>          
+            <h1>
+            	<a id="menu-toggle" href="#" class="btn btn-default"><i class="icon-reorder"></i></a>
+            	Dashboard            	
+            </h1>
         </div>
         <!-- Keep all page content within the page-content inset div! -->
         <div class="page-content inset">
-          <div class="row">            
-            <div id = "ongoing" class="col-md-4 well">              
-              <p><b> Ongoing </b></p>
-              <div id="spinner"></div>
-            </div>
-            <div class="col-md-4 well">
-              <p><b> Analysis finished </b></p>
-              <p>Message: @message</p>
-            </div>
-            <div class="col-md-4 well">
-              <p><b> Delivered </b></p>
-              <p>Message: @message</p>
-            </div>
+          <div class="row">                         
+            <div id="dashboard">          
+	  	  	</div>
+       
+	  	    <div id="labview">		  	               
+				@labview()
+	  	  	</div>
+       
+            <div id="analysisview">                        
+				@analysisview()
+	  	  	</div>
+	  	
+        
           </div>
         </div>
       </div>

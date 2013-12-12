@@ -31,9 +31,11 @@ object Projects {
     }
   }
 
-  def findAllOnGoing(): Seq[Project] = {
+  def findProjectWithStatus(status: String): Seq[Project] = {
     DB.withConnection { implicit connection =>
-      SQL("select * from projects where status='ongoing'").as(Projects.simple *)
+      SQL("select * from projects where status={status}")
+        .on('status -> status)
+        .as(Projects.simple *)
     }
   }
 
@@ -47,7 +49,7 @@ object Projects {
     DB.withConnection { implicit connection =>
       SQL("insert into projects (name, status) values ({name}, {status})").on(
         'name -> project.name,
-        'status -> project.status.toString()).executeInsert()
+        'status -> project.status).executeInsert()
     }
   }
 
@@ -55,7 +57,7 @@ object Projects {
     DB.withConnection { implicit connection =>
       SQL("update projects set status={status} where name={name} ").on(
         'name -> id,
-        'status -> status.toString()).executeInsert()
+        'status -> status).executeInsert()
     }
   }
 

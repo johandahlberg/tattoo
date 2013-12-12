@@ -12,13 +12,16 @@ import play.api.libs.json.Json
 import models.PiperProject
 import Projects.projectFormat
 import models.PiperProjects.piperProjectFormat
+import models.LabProjects.labProjectFormat
+import models.ProjectConstants
+import models.LabProjects
 
 object Application extends Controller {
 
   def index = Action {
     Ok(views.html.index("???"))
   }
-
+  
   def registerProject(id: String) = Action {
     Projects.create(Project(id, "OnGoing"))
     Ok("Added id:" + id)
@@ -27,9 +30,25 @@ object Application extends Controller {
   def allProjects() = Action {
     Ok(Json.toJson(Projects.findAll))
   }
+  
+  def allLabProjects() = Action {
+    Ok(Json.toJson(LabProjects.findAll))
+  }
 
   def onGoingProjects = Action {
-    Ok(Json.toJson(Projects.findAllOnGoing))
+    Ok(Json.toJson(Projects.findProjectWithStatus(ProjectConstants.ONGOING)))
+  }
+
+  def analysisFinishedProjects = Action {
+    Ok(Json.toJson(Projects.findProjectWithStatus(ProjectConstants.ANALYSIS_FINISHED)))
+  }
+
+  def deliveredProjects = Action {
+    Ok(Json.toJson(Projects.findProjectWithStatus(ProjectConstants.DELIVERED)))
+  }
+  
+  def errorProjects = Action {
+    Ok(Json.toJson(Projects.findProjectWithStatus(ProjectConstants.ERROR)))
   }
 
   def projectStatus(id: String) = Action {
@@ -50,16 +69,20 @@ object Application extends Controller {
       BadRequest("id: " + id + " not found.")
   }
 
+  def onGoingInProject(id: String) = Action {
+    updateStatusInProject(id, ProjectConstants.ONGOING)
+  }
+
   def errorInProject(id: String) = Action {
-    updateStatusInProject(id, "Errored")
+    updateStatusInProject(id, ProjectConstants.ERROR)
   }
 
   def analysisFinishedInProject(id: String) = Action {
-    updateStatusInProject(id, "AnalysisFinished")
+    updateStatusInProject(id, ProjectConstants.ANALYSIS_FINISHED)
   }
 
   def deliveredProject(id: String) = Action {
-    updateStatusInProject(id, "Delivered")
+    updateStatusInProject(id, ProjectConstants.DELIVERED)
   }
 
   def associatePiperLogWithProject(id: String, log: String) = Action {
@@ -73,6 +96,7 @@ object Application extends Controller {
 
   def updatePiperLogWithProject(id: String, log: String) = Action {
     if (PiperProjects.findAll.map(f => f.name).contains(id)) {
+      PiperProjects.update(id, log)
       val matching = PiperProjects.find(id)
       Ok(Json.toJson(matching))
     } else
@@ -106,8 +130,12 @@ object Application extends Controller {
       val result = pb.!!.split("\n").last
 
       result match {
-        case Pattern(pending, run, failed, done) =>
-          Some(JobStatusContainer(pending.toInt, run.toInt, done.toInt, failed.toInt))
+        case Pattern(pending, run, failed, done) => {
+          val container = JobStatusContainer(pending.toInt, run.toInt, done.toInt, failed.toInt)
+          Logger.info("Found job status: " + container + " for log: " + log)
+          Some(container)
+        }
+          
         case _ => None
       }
     } catch {
